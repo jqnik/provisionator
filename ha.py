@@ -56,12 +56,12 @@ def enable_hdfsha(conf):
         hdfs_cfg, hdfs_roletype_cfg = hdfs.get_config(view='full')
         host_id_map = util.host_id_map(config, api)
         active_namenode = hdfs_svc['haconfig']['active_namenode']
-        standby_namenode = hdfs_svc['haconfig']['active_namenode']
-        journalnode1 = hdfs_svc['haconfig']['active_namenode']
-        journalnode2 = hdfs_svc['haconfig']['active_namenode']
-        journalnode3 = hdfs_svc['haconfig']['active_namenode']
-        ns = hdfs_svc['haconfig']['active_namenode']
-        jnEditsDir = hdfs_svc['haconfig']['active_namenode']
+        standby_namenode = hdfs_svc['haconfig']['standby_namenode']
+        journalnode1 = hdfs_svc['haconfig']['journalnode1']
+        journalnode2 = hdfs_svc['haconfig']['journalnode2']
+        journalnode3 = hdfs_svc['haconfig']['journalnode3']
+        ns = hdfs_svc['haconfig']['ns']
+        jnEditsDir = hdfs_svc['haconfig']['jnEditsDir']
 
         ha_hosts_map[active_namenode_key] = active_namenode
         ha_hosts_map[standby_namenode_key] = standby_namenode
