@@ -1,0 +1,189 @@
+{
+  "cm" : {
+    "host" : "node-1.domain.com",
+    "user" : "admin",
+    "password" : "admin",
+    "ssl" : false,
+    "kdc_user" : "cloudera-scm/admin@CLOUDERA",
+    "kdc_pass" : "cloudera",
+    "config" : {
+      "REMOTE_PARCEL_REPO_URLS" : "http://archive.domain.com/cdh5/parcels/5.7/",
+      "KRB_ENC_TYPES" : "aes128-cts-hmac-sha1-96",
+      "MAX_RENEW_LIFE" : "604800",
+      "KRB_RENEW_LIFETIME" : "604800",
+      "SECURITY_REALM" : "CLOUDERA"
+    }
+  },
+  "mgmt" : {
+    "config" : {
+    },
+    "services" : [
+      {
+        "name" : "ALERTPUBLISHER",
+        "config" : {
+            "alert_heapsize" : "67108864"
+        }
+      },
+      { 
+        "name" : "EVENTSERVER",
+        "config" : {
+          "event_server_heapsize" : "268435456"
+        }
+      },
+      {
+        "name" : "REPORTSMANAGER",
+        "config" : {
+          "headlamp_database_host" : "node-1.domain.com:3306",
+          "headlamp_database_name" : "rman",
+          "headlamp_database_password" : "rman_password",
+          "headlamp_database_type" : "mysql",
+          "headlamp_database_user" : "rman",
+          "headlamp_heapsize" : "268435456"
+        }
+      },
+      {
+        "name" : "SERVICEMONITOR",
+        "config" : {
+          "firehose_heapsize" : "536870912",
+          "firehose_non_java_memory_bytes" : "805306368"
+        }
+      },
+      {
+        "name" : "HOSTMONITOR",
+        "config" : {
+          "firehose_heapsize" : "536870912",
+          "firehose_non_java_memory_bytes" : "805306368"
+        }
+      }
+    ]
+  },
+  "cluster" : {
+    "name" : "Provisionator Test Cluster",
+    "version" : "5.7.0",
+    "hosts" : [
+      "node-1.domain.com",
+      "node-2.domain.com",
+      "node-3.domain.com"
+    ],
+    "services" : [
+      {
+        "name" : "ZooKeeper",
+        "type" : "ZOOKEEPER",
+        "roles" : [
+          {
+            "type" : "SERVER",
+            "hosts" : [ "node-1.domain.com" ],
+            "config" : {
+              "dataDir" : "/cloudera/var/lib/zookeeper",
+              "dataLogDir" : "/cloudera/var/lib/zookeeper",
+              "zookeeper_server_java_heapsize" : "268435456"
+            } 
+          }
+        ]
+      },
+      {
+        "name" : "HDFS",
+        "type" : "HDFS",
+        "config" : {
+
+        },
+        "haconfig" : {
+	  "active_namenode" : "node-1.domain.com",
+          "standby_namenode" : "node-2.domain.com",
+          "journalnode1" : "node-1.domain.com",
+          "journalnode2" : "node-2.domain.com",
+          "journalnode3" : "node-3.domain.com",
+          "ns" : "nameservice1",
+          "jnEditsDir" : "/cloudera/dfs/jn"
+        },
+        "roles" : [
+          {
+            "type" : "NAMENODE",
+            "hosts" : [ "node-1.domain.com" ],
+            "config" : {
+              "dfs_name_dir_list" : "/cloudera/dfs/nn",
+              "namenode_java_heapsize" : "268435456"
+            }
+          },
+          {
+            "type" : "SECONDARYNAMENODE",
+            "hosts" : [ "node-2.domain.com" ],
+            "config" : {
+              "fs_checkpoint_dir_list" : "/cloudera/dfs/snn",
+              "secondary_namenode_java_heapsize" : "268435456"
+            }
+          },
+          {
+            "type" : "DATANODE",
+            "hosts" : [ 
+              "node-1.domain.com",
+              "node-2.domain.com",
+              "node-3.domain.com"
+            ],
+            "config" : {
+              "dfs_data_dir_list" : "/cloudera/dfs/dn",
+              "datanode_java_heapsize" : "268435456"
+            }
+          },
+          {
+            "type" : "GATEWAY",
+            "hosts" : [ 
+              "node-1.domain.com",
+              "node-2.domain.com",
+              "node-3.domain.com"
+            ],
+            "config" : {
+              "dfs_client_use_trash" : "true"
+            }
+          }
+        ]
+      },
+      {
+        "name" : "YARN",
+        "type" : "YARN",
+        "config" : {
+          "hdfs_service" : "HDFS"
+        },
+	"haconfig" : {
+          "standby_rm" : "node-2.domain.com"
+	},
+        "roles" : [
+          {
+            "type" : "RESOURCEMANAGER",
+            "hosts" : [ "node-3.domain.com" ],
+            "config" : {
+              "resource_manager_java_heapsize" : "268435456"
+            }
+          },
+          {
+            "type" : "NODEMANAGER",
+            "hosts" : [ 
+              "node-1.domain.com",
+              "node-2.domain.com",
+              "node-3.domain.com"
+            ],
+            "config" : {
+              "yarn_nodemanager_local_dirs" : "/cloudera/yarn/nm",
+              "node_manager_java_heapsize" : "268435456"
+            }
+          },
+          {
+            "type" : "JOBHISTORY",
+            "hosts" : [ "node-2.domain.com" ],
+            "config" : {
+              "mr2_jobhistory_java_heapsize" : "268435456"
+            }
+          },
+          {
+            "type" : "GATEWAY",
+            "hosts" : [ 
+              "node-1.domain.com",
+              "node-2.domain.com",
+              "node-3.domain.com"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
